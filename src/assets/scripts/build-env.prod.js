@@ -51,7 +51,7 @@ try {
 const formattedContent = `export const environment = ${JSON.stringify({
   production: process.env.APP_VERSION !== 'debug',
   name: process.env.APP_NAME || packageJson.name,
-  version: process.env.APP_VERSION || packageJson.version,
+  version: packageJson.version,
   firebaseConfig: {
     apiKey: process.env.FIREBASE_API_KEY,
     authDomain: `${process.env.FIREBASE_PROJECT_ID}.firebaseapp.com`,
