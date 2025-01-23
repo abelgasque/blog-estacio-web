@@ -1,0 +1,61 @@
+name: Deploy to Firebase
+
+on:
+  push:
+    # branches:
+    #   - main
+    tags:
+      - 'v*'
+
+jobs:
+  firebase-deploy:
+    runs-on: ubuntu-latest
+    environment: ${{ github.ref == 'refs/heads/main' && 'development' || 'production' }}
+
+    steps:
+    - name: Notify Discord (Build Started)
+      run: |
+        curl -H "Content-Type: application/json" \
+          -X POST \
+          -d '{"username": "Firebase Bot", "content": "🚀 **Deploy iniciado no Firebase!**\nRepositório: `${{ github.repository }}`\nAmbiente: Desenvolvimeto\nTag: `${{ github.ref_name }}`"}' \
+          ${{ secrets.DISCORD_WEBHOOK_URL }}
+    
+    - name: Checkout Code
+      uses: actions/checkout@v2
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14.x'
+      
+    - name: Install nodejs and firebase tools
+      run: npm install --force && npm install -g firebase-tools
+    
+    - name: Prebuild Angular App
+      run: npm run build-prod
+      env:
+        APP_DEBUG: production
+        APP_NAME: ${{ github.repository }}
+        APP_VERSION: ${{ github.ref_name }}
+    
+    - name: Build Angular App
+      run: npm run build -- --configuration=production
+
+    - name: Deploy to Firebase Hosting
+      run: firebase deploy --only hosting:${{ secrets.FIREBASE_HOST }} --token="${{ secrets.FIREBASE_TOKEN }}" --project="${{ secrets.FIREBASE_PROJECT_ID }}"
+      
+    - name: Notify Discord (Success)
+      if: success()
+      run: |
+        curl -H "Content-Type: application/json" \
+          -X POST \
+          -d '{"username": "Firebase Bot", "content": "✅ **Deploy concluído com sucesso no Firebase!**\nRepositório: `${{ github.repository }}`\nAmbiente: Desenvolvimento\nTag: `${{ github.ref_name }}`"}' \
+          ${{ secrets.DISCORD_WEBHOOK_URL }}
+
+    - name: Notify Discord (Failure)
+      if: failure()
+      run: |
+        curl -H "Content-Type: application/json" \
+          -X POST \
+          -d '{"username": "Firebase Bot", "content": "❌ **Deploy falhou no Firebase!**\nRepositório: `${{ github.repository }}`\nAmbiente: Desenvolvimento\nTag: `${{ github.ref_name }}`"}' \
+          ${{ secrets.DISCORD_WEBHOOK_URL }}
