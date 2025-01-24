@@ -5,22 +5,6 @@ const path = require('path');
 const dir = "src/environments";
 const files = ["environment.ts", "environment.prod.ts"];
 
-const packageJsonPath = path.resolve(__dirname, '../../../package.json');
-const packageJson = require(packageJsonPath);
-
-Object.assign(packageJson, {
-  name: process.env.APP_NAME || packageJson.name,
-  version: process.env.APP_VERSION || packageJson.version,
-});
-
-try {
-  fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
-  console.log("Versão atualizada no package.json com sucesso!");
-} catch (error) {
-  console.error("Erro ao atualizar package.json:", error);
-  process.exit(1);
-}
-
 try {
   fs.writeFileSync(
     path.resolve(__dirname, '../../../firebase.json'),
@@ -50,8 +34,8 @@ try {
 
 const formattedContent = `export const environment = ${JSON.stringify({
   production: process.env.APP_VERSION !== 'debug',
-  name: packageJson.name,
-  version: packageJson.version,
+  name: process.env.APP_NAME || packageJson.name,
+  version: process.env.APP_VERSION || packageJson.version,
   firebaseConfig: {
     apiKey: process.env.FIREBASE_API_KEY,
     authDomain: `${process.env.FIREBASE_PROJECT_ID}.firebaseapp.com`,
