@@ -57,7 +57,7 @@ jobs:
 
     - name: Deploy to S3
       run: |
-        aws s3 sync ./dist/ s3://${{ secrets.AWS_S3_BUCKET_NAME }} --delete
+        aws s3 sync ./dist/BlogEstacio/ s3://${{ secrets.AWS_S3_BUCKET_NAME }} --delete
         aws s3 website s3://${{ secrets.AWS_S3_BUCKET_NAME }} --index-document index.html --error-document index.html
 
     - name: Notify Discord (Success)
