@@ -11,7 +11,7 @@ try {
     JSON.stringify({
       hosting: {
         site: process.env.FIREBASE_HOST,
-        public: "dist/BlogEstacio",
+        public: "dist",
         ignore: [
           "firebase.json",
           "**/.*",
