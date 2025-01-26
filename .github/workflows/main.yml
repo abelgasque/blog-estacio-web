@@ -24,7 +24,7 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '23.x'
+        node-version: '14.x'
 
     - name: Install dependencies
       run: npm install --force
@@ -44,7 +44,7 @@ jobs:
         FIREBASE_MEASUREMENT_ID: ${{ secrets.FIREBASE_MEASUREMENT_ID }}
   
     - name: Build Angular App
-      run: npm run build -- --configuration=production
+      run: npm run build --configuration=production
 
     - name: Install Firebase Tools
       run: npm install -g firebase-tools
