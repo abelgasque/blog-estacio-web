@@ -9,6 +9,7 @@
 /src/environments
 .env
 firebase.json
+.angular/
 
 # dependencies
 /node_modules

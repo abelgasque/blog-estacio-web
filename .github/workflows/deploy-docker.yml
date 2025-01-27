@@ -1,0 +1,81 @@
+name: Build and Deploy (Docker)
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+
+jobs:
+  build-deploy:
+    name: Build Application
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v2
+
+    - name: Notify Discord (Build Started)
+      run: |
+        curl -H "Content-Type: application/json" \
+        -X POST \
+        -d '{"username": "Bot Docker", "content": "🚀 **Build iniciado!**\nRepositório: `${{ github.repository }}`\nAmbiente: Produção\nBranch/Tag: `${{ github.ref_name }}`"}' \
+        ${{ secrets.DISCORD_WEBHOOK_URL }} || true
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '18.x'
+
+    - name: Install dependencies
+      run: npm install --force
+
+    - name: Prebuild Angular App
+      run: npm run build-prod
+      env:
+        APP_DEBUG: production
+        APP_NAME: ${{ github.repository }}
+        APP_VERSION: ${{ github.ref_name }}
+        APP_AVATAR_IMG: https://github.com/${{ github.actor }}.png
+  
+    - name: Build Angular App
+      run: npm run build --configuration=production
+
+    - name: Auth into Docker Hub
+      run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+  
+    - name: Push Docker Image
+      if: github.ref == 'refs/heads/main'
+      run: |
+        docker build -t ${{ github.repository }} .
+        docker push ${{ github.repository }}
+  
+    - name: Push Docker Image new version
+      if: startsWith(github.ref, 'refs/tags/')
+      run: |
+        docker build -t ${{ github.repository }}:${{ github.ref_name }} .
+        docker push ${{ github.repository }}:${{ github.ref_name }}
+
+  report-status:
+    name: Report Build Status
+    needs: build-deploy
+    environment: production
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Notify Discord (Success)
+      if: success()
+      run: |
+        curl -H "Content-Type: application/json" \
+        -X POST \
+        -d '{"username": "Bot Docker", "content": "✅ **Sucesso ao gerar versão!**\nRepositório: `${{ github.repository }}`\nAmbiente: Produção\nBranch/Tag: `${{ github.ref_name }}`"}' \
+        ${{ secrets.DISCORD_WEBHOOK_URL }}
+
+    - name: Notify Discord (Failure)
+      if: failure()
+      run: |
+        curl -H "Content-Type: application/json" \
+        -X POST \
+        -d '{"username": "Bot Docker", "content": "❌ **Falha ao gerar versão!**\nRepositório: `${{ github.repository }}`\nAmbiente: Produção\nBranch/Tag: `${{ github.ref_name }}`"}' \
+        ${{ secrets.DISCORD_WEBHOOK_URL }}
