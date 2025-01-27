@@ -52,7 +52,7 @@ jobs:
     - name: Push Docker Image
       if: github.ref == 'refs/heads/main'
       run: |
-        docker build -t ${{ github.repository }} . --file Dockerfile --tag ${{ github.repository }}:$(date +%s)
+        docker build -t ${{ github.repository }} . --file Dockerfile --tag ${{ github.repository }}
         docker push ${{ github.repository }}
     
     - name: Push Docker Image new version
