@@ -1,4 +1,4 @@
-name: Build and Deploy (Production)
+name: Deploy in Github pages
 
 on:
   push:
