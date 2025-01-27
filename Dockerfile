@@ -1,5 +1,5 @@
 # Etapa de Build
-FROM node:23-alpine AS build
+FROM node:14-alpine AS build
 
 # Definir o diretório de trabalho
 WORKDIR /app
