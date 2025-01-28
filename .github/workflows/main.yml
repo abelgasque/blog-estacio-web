@@ -44,7 +44,7 @@ jobs:
         FIREBASE_MEASUREMENT_ID: ${{ secrets.FIREBASE_MEASUREMENT_ID }}
       
     - name: Build Angular App
-      run: ng serve --output-path=dist --base-href /blog-estacio-web/
+      run: ng build --output-path=dist --base-href /blog-estacio-web/
 
     - name: Deploy Github Pages
       run: npx angular-cli-ghpages --dir=dist
