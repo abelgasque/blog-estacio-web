@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "npm run build-prod && ng serve",
-    "build": "npm run build --output-path=dist --base-href=/blog-estacio-web/ --configuration=production",
+    "build": "npm run build --configuration=production",
     "build-prod": "node src/assets/scripts/build-env.prod.js",
     "test": "ng test",
     "lint": "ng lint",
