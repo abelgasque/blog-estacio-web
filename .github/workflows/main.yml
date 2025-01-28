@@ -44,10 +44,16 @@ jobs:
         FIREBASE_MEASUREMENT_ID: ${{ secrets.FIREBASE_MEASUREMENT_ID }}
       
     - name: Build Angular App
-      run: npm run build --configuration=production --output-path=dist --base-href=/blog-estacio-web/
-
-    - name: Deploy Github Pages
-      run: npx angular-cli-ghpages --dir=dist
+      run: npm run build --configuration=production --output-path=dist --base-href /blog-estacio-web/
+  
+    - name: Install Github Pages
+      run: npm i -g angular-cli-ghpages
+  
+    - name: Deploy to GitHub Pages
+      uses: JamesIves/github-pages-deploy-action@v4
+      with:
+        branch: gh-pages
+        folder: dist
 
   report-status:
     name: Report Build Status
