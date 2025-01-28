@@ -54,7 +54,7 @@ jobs:
       with:
         branch: main
         folder: docs
-        token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ secrets.GH_TOKEN }}
 
   report-status:
     name: Report Build Status
