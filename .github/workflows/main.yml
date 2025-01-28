@@ -45,15 +45,12 @@ jobs:
   
     - name: Build Angular App
       run: npm run build -- --output-path=dist --base-href /cv-portifolio-web/ --configuration=production
-
+      
     - name: Install Github Pages
       run: npm i -g angular-cli-ghpages
-
-    - name: Deploy to GitHub Pages
-      uses: JamesIves/github-pages-deploy-action@v4
-      with:
-        branch: gh-pages
-        folder: dist
+      
+    - name: Deploy Github Pages
+      run: npm run deploy
 
   report-status:
     name: Report Build Status
