@@ -6,7 +6,6 @@
     "start": "npm run build-prod && ng serve",
     "build": "npm run build --output-path=dist --base-href=/blog-estacio-web/ --configuration=production",
     "build-prod": "node src/assets/scripts/build-env.prod.js",
-    "deploy:gh-pages": "npm run build && npx angular-cli-ghpages --dir=dist",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
