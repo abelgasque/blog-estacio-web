@@ -52,9 +52,8 @@ jobs:
     - name: Deploy to GitHub Pages
       uses: JamesIves/github-pages-deploy-action@v4
       with:
-        branch: gh_pages
+        branch: gh-pages
         folder: dist
-        token: ${{ secrets.GH_TOKEN }}
 
   report-status:
     name: Report Build Status
